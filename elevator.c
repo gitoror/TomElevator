@@ -24,7 +24,7 @@ PersonList* exitElevator(Elevator *e) {
     PersonList *newList = NULL;
     Person *p = (e->persons)->person;
     while (e->persons->next != NULL) {
-        if (p->dest != e->currentFloor) {
+        if (p->dest = e->currentFloor) {
             insert(p,exitList);
         }
         else {
@@ -51,12 +51,26 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
             numberPersons++;
         }
         else {
-            insert(newPerson,newWaitingList);
+            insert(newPerson,newWaitingList);// reverse waiting list ...
         }
+        newPerson = waitingList->next->person;
     }
     return newWaitingList;
 }
 
 void stepElevator(Building *b) {
-
+    Elevator *e = b->elevator;
+    if (e->currentFloor == e->targetFloor) {
+        
+        PersonList *exitList = exitElevator(e);
+        
+        b->waitingLists[e->currentFloor] = enterElevator(e,b->waitingLists[e->currentFloor]);
+        e->targetFloor = e->persons->person->dest;
+    }
+    if (e->currentFloor < e->targetFloor) {
+        e->currentFloor++;
+    }
+    if (e->currentFloor > e->targetFloor) {
+        e->currentFloor--;
+    }
 }
