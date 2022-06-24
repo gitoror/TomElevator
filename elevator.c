@@ -20,19 +20,35 @@ Building *create_building(int nbFloor, Elevator *elevator, PersonList **waitingL
 }
 
 PersonList* exitElevator(Elevator *e) {
-    PersonList *newList;
-    e->persons = createList(newList);
-    return newList;
+    PersonList *exitList = NULL;
+    PersonList *newList = NULL;
+    Person *p = (e->persons)->person;
+    while (e->persons->next != NULL) {
+        if (p->dest != e->currentFloor) {
+            insert(p,exitList);
+        }
+        else {
+            insert(p,newList);
+        }
+        p = e->persons->next->person;
+    }
+    e->persons = newList;
+    return exitList;
 }
 
-PersonList* enterElevator(Elevator *e, PersonList *list) {
-    // list of new people
-    Person* person = list->person;
-    while (list->next != NULL) {
-        person = (list->next)->person;
-        insert(person, e->persons);
+PersonList* enterElevator(Elevator *e, PersonList *waitingList) {  
+    int numberPersons = 0;
+    while (e->persons->next != NULL) {
+        numberPersons++;
+        e->persons = e->persons->next;
     }
-    return e->persons;
+
+    Person *newPerson = list->person;
+    while(list->next != NULL) {
+        if (numberPersons < e->capacity) {
+
+        }
+    }
 }
 
 void stepElevator(Building *b) {

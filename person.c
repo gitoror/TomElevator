@@ -14,9 +14,6 @@ Person* createPerson(int src, int dest) {
     return person;
 }
 
-PersonList* createList(PersonList *list) {
-    list->next = NULL;
-}
 
 PersonList* insert(Person *p, PersonList *list) {
     list->person = p;
