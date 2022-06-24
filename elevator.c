@@ -33,7 +33,7 @@ PersonList* exitElevator(Elevator *e) {
         p = e->persons->next->person;
     }
     e->persons = newList;
-    return exitList;
+    return exitList; //ppl who leave the elevator
 }
 
 PersonList* enterElevator(Elevator *e, PersonList *waitingList) {  
@@ -43,12 +43,18 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
         e->persons = e->persons->next;
     }
 
-    Person *newPerson = list->person;
-    while(list->next != NULL) {
+    PersonList *newWaitingList = NULL;
+    Person *newPerson = waitingList->person;
+    while(waitingList->next != NULL) {
         if (numberPersons < e->capacity) {
-
+            insert(newPerson,e->persons);
+            numberPersons++;
+        }
+        else {
+            insert(newPerson,newWaitingList);
         }
     }
+    return newWaitingList;
 }
 
 void stepElevator(Building *b) {
