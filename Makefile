@@ -18,4 +18,3 @@ clean :
 run : 
 	./prog
 
-CFLAGS  : -g
