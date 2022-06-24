@@ -5,7 +5,7 @@
 #include "elevator.h"
 #include "person.h"
 
-#define HEIGHT 30
+#define HEIGHT 20
 #define WIDTH 40
 #define PERSON_WIDTH 3
 

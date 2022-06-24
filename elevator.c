@@ -22,38 +22,49 @@ Building *create_building(int nbFloor, Elevator *elevator, PersonList **waitingL
 PersonList* exitElevator(Elevator *e) {
     PersonList *exitList = NULL;
     PersonList *newList = NULL;
-    Person *p = (e->persons)->person;
-    while (e->persons->next != NULL) {
-        if (p->dest == e->currentFloor) {
-            insert(p,exitList);
+    if (e->persons != NULL) {
+        Person *p = (e->persons)->person;
+        while (e->persons->next != NULL) {
+            if (p->dest == e->currentFloor) {
+                insert(p,exitList);
+            }
+            else {
+                insert(p,newList);
+            }
+            p = e->persons->next->person;
         }
-        else {
-            insert(p,newList);
-        }
-        p = e->persons->next->person;
-    }
+    } 
     e->persons = newList;
     return exitList; //ppl who leave the elevator
 }
 
 PersonList* enterElevator(Elevator *e, PersonList *waitingList) {  
+    
     int numberPersons = 0;
-    while (e->persons->next != NULL) {
-        numberPersons++;
-        e->persons = e->persons->next;
+    if (e->persons != NULL) {
+        PersonList *list = e->persons;
+        while (list->next != NULL) {
+            numberPersons++;
+            list = e->persons->next;
+        }
     }
 
     PersonList *newWaitingList = NULL;
-    Person *newPerson = waitingList->person;
-    while(waitingList->next != NULL) {
-        if (numberPersons < e->capacity) {
-            insert(newPerson,e->persons);
-            numberPersons++;
+    if (waitingList != NULL) {
+        Person *newPerson = waitingList->person;
+        while(waitingList->next != NULL) {
+            if (numberPersons < e->capacity) {
+                insert(newPerson,e->persons);
+                numberPersons++;
+            }
+            else {
+                insert(newPerson,newWaitingList);// reverse waiting list ...
+            }
+            newPerson = waitingList->next->person;
+
+            waitingList = waitingList->next;
         }
-        else {
-            insert(newPerson,newWaitingList);// reverse waiting list ...
-        }
-        newPerson = waitingList->next->person;
+        
     }
     return newWaitingList;
 }
@@ -61,16 +72,17 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
 void stepElevator(Building *b) {
     Elevator *e = b->elevator;
     if (e->currentFloor == e->targetFloor) {
-        
         PersonList *exitList = exitElevator(e);
-        
         b->waitingLists[e->currentFloor] = enterElevator(e,b->waitingLists[e->currentFloor]);
-        e->targetFloor = e->persons->person->dest;
+
+        
     }
+    
     if (e->currentFloor < e->targetFloor) {
         e->currentFloor++;
     }
     if (e->currentFloor > e->targetFloor) {
         e->currentFloor--;
     }
+    
 }
