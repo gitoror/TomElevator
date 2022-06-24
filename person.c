@@ -9,15 +9,14 @@ Person* createPerson(int src, int dest) {
     (*person).src = src;
     // ou person->src = src;
     (*person).dest = dest;
-    
-
     return person;
 }
 
 
 PersonList* insert(Person *p, PersonList *list) {
-    list->person = p;
-    list->next = list;
-    return list;
+    PersonList *newList = malloc(sizeof(PersonList));
+    newList->person = p;
+    newList->next = list;
+    return newList;
 }
 
