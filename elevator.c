@@ -54,7 +54,7 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
     }
 
     
-    PersonList *newList = NULL; // people who remain in the elevator
+    PersonList *newList = e->persons; // people who remain in the elevator 
     PersonList *newWaitingList = NULL; // people who stay outside the elevator
 
     PersonList *_waitingList = waitingList; // for the while
@@ -70,13 +70,22 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
         }
         _waitingList = _waitingList->next;
     }
+
+    // reverse of the waiting list
+    PersonList *reverseList = newWaitingList;
+    while (newWaitingList != NULL) {
+        Person *p = newWaitingList->person;
+        reverseList = insert(p,reverseList);
+        newWaitingList = newWaitingList->next;
+    }
+
     e->persons = newList;
-    return newWaitingList;
+    return reverseList;
 }
 
 void stepElevator(Building *b) {
     Elevator *e = b->elevator;
-    if (e->currentFloor != e->targetFloor) {
+    if (e->currentFloor != e->targetFloor) { 
         e->currentFloor = e->targetFloor; // an input changed targetFloor
         // Actualize people in the elevator and waiting, useful to print new people. 
         PersonList *exitList = exitElevator(e);  
