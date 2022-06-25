@@ -20,69 +20,65 @@ Building *create_building(int nbFloor, Elevator *elevator, PersonList **waitingL
 }
 
 PersonList* exitElevator(Elevator *e) {
-    PersonList *exitList = NULL;
-    PersonList *newList = NULL;
-    if (e->persons != NULL) {
-        Person *p = (e->persons)->person;
-        while (e->persons->next != NULL) {
-            if (p->dest == e->currentFloor) {
-                insert(p,exitList);
-            }
-            else {
-                insert(p,newList);
-            }
-            p = e->persons->next->person;
+    // This functions returns the list of persons who quit the elevator
+    // and actualize the persons who stay inside.
+    PersonList *exitList = NULL; //ppl who leave the elevator
+    PersonList *newList = NULL; // people who remain in the elevator
+    PersonList *persons = e->persons; // for the while
+    Person *p;
+    while (persons != NULL) {
+        p = persons->person;
+        if (p->dest  == e->currentFloor) {
+            exitList = insert(p,exitList);
         }
-    } 
-    e->persons = newList;
-    return exitList; //ppl who leave the elevator
+        else {
+            newList = insert(p,newList);
+        }
+        persons = persons->next;
+    }
+    e->persons = newList; // people remaining in the elevator
+    return exitList; 
 }
 
-PersonList* enterElevator(Elevator *e, PersonList *waitingList) {  
-    
+PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
+    // This function returns the new list of people who are waiting at the 
+    // floor where the elevator is. It also actualize the persons inside the 
+    // elevator because of entrance.
+
+    // Count the number of persons in the elevator to compare with capacity.  
     int numberPersons = 0;
-    if (e->persons != NULL) {
-        PersonList *list = e->persons;
-        while (list->next != NULL) {
+    PersonList *countList = e->persons; // for the while
+    while  (countList != NULL) {
+        numberPersons++;
+        countList = countList->next;
+    }
+
+    
+    PersonList *newList = NULL; // people who remain in the elevator
+    PersonList *newWaitingList = NULL; // people who stay outside the elevator
+
+    PersonList *_waitingList = waitingList; // for the while
+    while (_waitingList != NULL) {
+        Person *p = _waitingList->person;
+        if (p->src == e->currentFloor & numberPersons < e->capacity) {
+            newList = insert(p, newList);
             numberPersons++;
-            list = e->persons->next;
         }
-    }
-
-    PersonList *newWaitingList = NULL;
-    if (waitingList != NULL) {
-        Person *newPerson = waitingList->person;
-        while(waitingList->next != NULL) {
-            if (numberPersons < e->capacity) {
-                insert(newPerson,e->persons);
-                numberPersons++;
-            }
-            else {
-                insert(newPerson,newWaitingList);// reverse waiting list ...
-            }
-            newPerson = waitingList->next->person;
-
-            waitingList = waitingList->next;
+        else {
+            newWaitingList = insert(p, newWaitingList); 
+            // We could reverse this list to keep the same order in the waiting list.
         }
-        
+        _waitingList = _waitingList->next;
     }
+    e->persons = newList;
     return newWaitingList;
 }
 
 void stepElevator(Building *b) {
     Elevator *e = b->elevator;
     if (e->currentFloor == e->targetFloor) {
-        PersonList *exitList = exitElevator(e);
-        b->waitingLists[e->currentFloor] = enterElevator(e,b->waitingLists[e->currentFloor]);
-
-        
+        // Actualize people in the elevator and waiting, useful to print new people. 
+        PersonList *exitList = exitElevator(e);  
+        b->waitingLists[e->currentFloor] = enterElevator(e,b->waitingLists[e->currentFloor]);   
     }
-    
-    if (e->currentFloor < e->targetFloor) {
-        e->currentFloor++;
-    }
-    if (e->currentFloor > e->targetFloor) {
-        e->currentFloor--;
-    }
-    
 }

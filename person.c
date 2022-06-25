@@ -6,8 +6,7 @@
 
 Person* createPerson(int src, int dest) {
     Person *person = malloc(sizeof(Person));
-    (*person).src = src;
-    // ou person->src = src;
+    (*person).src = src; // ou person->src = src;
     (*person).dest = dest;
     return person;
 }
