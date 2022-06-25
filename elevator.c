@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 Elevator *create_elevator(int capacity, int currentFloor, PersonList *persons) {
+    // Create an elevator
     Elevator *elevator = malloc(sizeof(Elevator));
     elevator->capacity = capacity;
     elevator->currentFloor = currentFloor;
@@ -12,6 +13,7 @@ Elevator *create_elevator(int capacity, int currentFloor, PersonList *persons) {
 }
 
 Building *create_building(int nbFloor, Elevator *elevator, PersonList **waitingLists) {
+    // Create a building
     Building *building = malloc(sizeof(Building));
     building->nbFloor = nbFloor;
     building->elevator = elevator;
@@ -22,6 +24,7 @@ Building *create_building(int nbFloor, Elevator *elevator, PersonList **waitingL
 PersonList* exitElevator(Elevator *e) {
     // This functions returns the list of persons who quit the elevator
     // and actualize the persons who stay inside.
+
     PersonList *exitList = NULL; //ppl who leave the elevator
     PersonList *newList = NULL; // people who remain in the elevator
     PersonList *persons = e->persons; // for the while
@@ -72,7 +75,7 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
     }
 
     // reverse of the waiting list
-    PersonList *reverseList = newWaitingList;
+    PersonList *reverseList = NULL;
     while (newWaitingList != NULL) {
         Person *p = newWaitingList->person;
         reverseList = insert(p,reverseList);
@@ -84,6 +87,7 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
 }
 
 void stepElevator(Building *b) {
+    // This function actualize the elevator in the building if it changed floor.
     Elevator *e = b->elevator;
     if (e->currentFloor != e->targetFloor) { 
         e->currentFloor = e->targetFloor; // an input changed targetFloor
