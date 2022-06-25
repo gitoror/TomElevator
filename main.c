@@ -69,7 +69,7 @@ int main() {
     for(int j=0 ; j<nbPerson ; j++) {
       int dest = rand() % (nbFloor);
       while (dest == currentFloor) { 
-        // persons must leave the elevator at a different floor than the initial
+        // Persons must leave the elevator at a different floor from the initial floor
         dest = rand() % (nbFloor);
       }
       Person *p = createPerson(currentFloor, dest);

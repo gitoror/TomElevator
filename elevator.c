@@ -76,9 +76,10 @@ PersonList* enterElevator(Elevator *e, PersonList *waitingList) {
 
 void stepElevator(Building *b) {
     Elevator *e = b->elevator;
-    if (e->currentFloor == e->targetFloor) {
+    if (e->currentFloor != e->targetFloor) {
+        e->currentFloor = e->targetFloor; // an input changed targetFloor
         // Actualize people in the elevator and waiting, useful to print new people. 
         PersonList *exitList = exitElevator(e);  
-        b->waitingLists[e->currentFloor] = enterElevator(e,b->waitingLists[e->currentFloor]);   
+        b->waitingLists[e->currentFloor] = enterElevator(e,b->waitingLists[e->currentFloor]);  
     }
 }
