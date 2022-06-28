@@ -1,2 +1,8 @@
 prog
 *.o
+
+// Si un fichier a déjàété push avant la création 
+// du gitigonore alors il faut le supprimer de git 
+// avec git rm --cached name
+// Le --cached est très important, il sert à ne pas modifier 
+// le fichier de l'ordi 
